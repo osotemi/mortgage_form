@@ -8,11 +8,12 @@
  */
 function Context(){
 
-    this.form_id = null;
+    this._form = null;
 
-    //Inicialitzem els objectes del joc
+    //Inicialitzem els objectes del formulari
     this.init= function(){
-		  this.form = document.mortgage_form;
+		  this._form = new Form();
+      this._form.name.placeholder = "Introduce name";
    	};
 
 	};

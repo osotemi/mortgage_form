@@ -5,6 +5,8 @@
  *
  */
 //importar subject
+var subject = require('./utils/ArrayList.js');
+
 var Form = function (){
   this.form_id = document.getElementById("mortgage_form");
 

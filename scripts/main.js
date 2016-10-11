@@ -14,11 +14,22 @@
 
  	head.appendChild(script)
  }
-
 include('scripts/form.js');
+include("scripts/utils/ArrayList.js");
+include("scripts/utils/Observer.js");
+include("scripts/utils/Subject.js");
+
 include('scripts/validate.js');
 
+function init(){
+
+	context=new Context();
+	context.init();
+}
+
 window.onload = function(){
+  init();
+
 
   document.form.addEventListener("onfocus", form.validateFormElement);
   window.addEventListener("onkeyup", form.validateFormElement);

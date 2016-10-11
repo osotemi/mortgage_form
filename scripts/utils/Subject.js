@@ -1,12 +1,13 @@
 //http://www.codeproject.com/Articles/13914/Observer-Design-Pattern-Using-JavaScript
 //Importar arraylist
-function Subject()
+var array_list = require('./utils/ArrayList.js');
+var withObserver =function()
 {
    this.observers = new ArrayList();
 }
 
 // Context represents an object instance (Ball in our case)
-Subject.prototype {
+withObserver.prototype {
   Notify : function( context ){
      var elem_modify =
 
@@ -38,4 +39,4 @@ Subject.prototype {
    this.observers.RemoveAt(this.observers.IndexOf( observer, 0 ));
  }
 };
-module.exports = Subject;
+module.exports = withSubject;

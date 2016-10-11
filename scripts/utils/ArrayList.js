@@ -126,3 +126,4 @@ ArrayList.prototype = {
      return m_returnValue;
   }
 }
+module.exports = ArrayList;
