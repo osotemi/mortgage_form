@@ -4,8 +4,7 @@
  * @this {Artifact}
  *
  */
-
-
+//importar subject
 var Form = function (){
   this.form_id = document.getElementById("mortgage_form");
 
@@ -13,6 +12,7 @@ var Form = function (){
   this.getActiveType = function(){
     return document.activeElement.type;
   }
+  whithSubject.call(this.prototype);
 }
 
 Form.prototype = {
