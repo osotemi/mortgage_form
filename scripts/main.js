@@ -31,37 +31,33 @@ var singletonContext = require('./patterns/singleton/singletonContext');
 
 //http://www.codeproject.com/Articles/13914/Observer-Design-Pattern-Using-JavaScript
 
-function ArrayList()
-{
+function ArrayList(){
    this.aList = []; //initialize with an empty array
 }
 
-ArrayList.prototype.Count = function()
-{
+ArrayList.prototype.Count = function(){
    return this.aList.length;
 };
 
-ArrayList.prototype.Add = function( object )
-{
+ArrayList.prototype.Add = function( object ){
    //Object are placed at the end of the array
    return this.aList.push( object );
 };
 
-ArrayList.prototype.GetAt = function( index ) //Index must be a number
-{
+ArrayList.prototype.GetAt = function( index ){ //Index must be a number
+
    if( index > -1 && index < this.aList.length )
       return this.aList[index];
    else
       return undefined; //Out of bound array, return undefined
 };
 
-ArrayList.prototype.Clear = function()
-{
+ArrayList.prototype.Clear = function(){
    this.aList = [];
 };
 
-ArrayList.prototype.RemoveAt = function ( index ) // index must be a number
-{
+ArrayList.prototype.RemoveAt = function ( index ){ // index must be a number
+
    var m_count = this.aList.length;
 
    if ( m_count > 0 && index > -1 && index < this.aList.length )
@@ -83,8 +79,7 @@ ArrayList.prototype.RemoveAt = function ( index ) // index must be a number
    }
 };
 
-ArrayList.prototype.Insert = function ( object, index )
-{
+ArrayList.prototype.Insert = function ( object, index ){
    var m_count       = this.aList.length;
    var m_returnValue = -1;
 
@@ -112,8 +107,7 @@ ArrayList.prototype.Insert = function ( object, index )
    return m_returnValue;
 };
 
-ArrayList.prototype.IndexOf = function( object, startIndex )
-{
+ArrayList.prototype.IndexOf = function( object, startIndex ){
    var m_count       = this.aList.length;
    var m_returnValue = - 1;
 
@@ -136,9 +130,7 @@ ArrayList.prototype.IndexOf = function( object, startIndex )
    return m_returnValue;
 };
 
-
-ArrayList.prototype.LastIndexOf = function( object, startIndex )
-{
+ArrayList.prototype.LastIndexOf = function( object, startIndex ){
    var m_count       = this.aList.length;
    var m_returnValue = - 1;
 
@@ -163,22 +155,19 @@ ArrayList.prototype.LastIndexOf = function( object, startIndex )
 
 //http://www.codeproject.com/Articles/13914/Observer-Design-Pattern-Using-JavaScript
 
-function Subject()
-{
+function Subject(){
    this.observers = new ArrayList();
 }
 
 // Context represents an object instance (Ball in our case)
-Subject.prototype.Notify = function( context )
-{
+Subject.prototype.Notify = function( context ){
    var m_count = this.observers.Count();
 
    for( var i = 0; i < m_count; i++ )
       this.observers.GetAt(i).Update( context );
 };
 
-Subject.prototype.getCountRajoles = function(  )
-{
+Subject.prototype.getCountRajoles = function(  ){
    var m_count = this.observers.Count();
    var cont=0;
    for( var i = 0; i < m_count; i++ ){
@@ -188,16 +177,14 @@ Subject.prototype.getCountRajoles = function(  )
    return cont;
 };
 
-Subject.prototype.AddObserver = function( observer )
-{
+Subject.prototype.AddObserver = function( observer ){
    if( !observer.Update )
       throw 'Wrong parameter';
 
    this.observers.Add( observer );
 };
 
-Subject.prototype.RemoveObserver = function( observer )
-{
+Subject.prototype.RemoveObserver = function( observer ){
    if( !observer.Update )
       throw 'Wrong parameter';
 
@@ -205,7 +192,8 @@ Subject.prototype.RemoveObserver = function( observer )
 };
 
 function Context(){
-  this.form_ = new Form();
+  this.form_ = new Form( "mortgage_form" );
+  this.validator_ = new Validator( this );
 
   document.mortgage_form.ingresos_mensuales.focus();
 
@@ -213,85 +201,111 @@ function Context(){
 }
 
 Context.prototype.start = function(){
-  this.form_.validateFormElement();
-  //this.monthly_incoming(document.mortgage_form.capital);
+  this.form_.notifyEventForm();
 
 };
 
-function Validate(){
-  this.valid = "";
+function withObserver(){
+
+   this.Update = function()
+   {
+      return;
+   }
 }
 
-Validate.prototype.monthly_incoming = function( elem_ingresos_id ){
-  var elem_ingresos_value = elem_ingresos_id.value;
+function Validator( context ){
+  this.valid = "";
+
+  this.context = context;
+
+  withObserver.call(Validator.prototype);
+  //We enroll stick as a ball observer
+	this.context.form_.AddObserver(this);
+
+  this.Update = function( form ){
+    this.current_element = form.getActiveInput();
+    this.current_type = form.getActiveType();
+    this.current_value =form.getActiveValue();
+
+    this.switchType();
+  }
+}
+
+Validator.prototype.money = function(  ){
+  var current_element = document.activeElement;
   var ingresos_pattern = /^[\d]{0,8}[.]?([\d]{1,2}?)$/;//float personal regular expresion
 
-  if (  elem_ingresos_value == "Ingresos mensuales" ){
-     elem_ingresos_id.value = "";
+  if (  this.current_value == "Ingresos mensuales" ){
+     this.current_element.value = "";
      this.valid = false;
   }
-  else if( elem_ingresos_value == "" ){
-    elem_ingresos_id.style.border = "1px solid red";
-    elem_ingresos_id.focus();
+  else if( this.current_value == "" ){
+    this.current_element.style.border = "1px solid red";
+    this.current_element.focus();
     this.valid = false;
   }
   else{
-    if(!ingresos_pattern.test(elem_ingresos_value)){
-       elem_ingresos_id.style.border = "1px solid red";
-       elem_ingresos_id.focus();
+    if(!ingresos_pattern.test(this.current_value)){
+       this.current_element.style.border = "1px solid red";
+       this.current_element.focus();
        this.valid = false;
     }
     else{
-      elem_ingresos_id.style.border = "2px solid green";
+      this.current_element.style.border = "2px solid green";
       this.valid = true;
     }
   }
 };
 
-function Form(){
-  this.form_id = document.getElementById("mortgage_form");
+Validator.prototype.switchType = function(){
+  //validate.monthly_incoming(form_elem_input);
 
+  switch (this.current_type) {
+    case "money":
+      this.money(this.current_element);
+      break;
+    default://text
+  }
+};
+
+function Form( form_id ){
+  this.form_id = form_id;
+  this.form_elem = document.getElementById(this.form_id);
 
   var self=this; //Artifici binding
   this.getFormSelf = function(){return self;};
-  this.getActiveType = function(){return document.activeElement.type;}
   this.getActiveInput = function(){return document.activeElement;}
+  this.getActiveType = function(){return document.activeElement.getAttribute("pa-type");}
+  this.getActiveValue = function(){return document.activeElement.value;}
 
   Subject.call(this.prototype);
-  Validate.call(this.prototype);
+
 }
 
 Form.prototype = new Subject();
 
-Form.prototype.recorrerForm = function(){
-/*
-  	var sAux={};
-  	var form = this.form_id;
-  	for (i=0; i<form.elements.length;i++)
-  	{
-  		//sAux += {"name: " . form.elements[i].name . " " , "type :  " + form.elements[i].type + " ", "value: " + form.elements[i].value + "\n" };
-  	}
-  	alert(sAux);*/
-  };
+Form.prototype.rateTypeFeilds = function(){
+  var rate_types = this.form_elem.interest_rate_type.value;
 
-Form.prototype.validateFormElement = function(){
-    var self = this.getFormSelf();
-    var form_elem_input= self.getActiveInput();
-    //var form_elem_type = self.getActiveType();
+  if( rate_types == "fixed"){
+    this.form_elem.fixed_interest.disabled = false;
+    this.form_elem.euribor.disabled = true;
+    this.form_elem.differential.disabled = true;
+  }
+  else {
+    this.form_elem.euribor.disabled = false;
+    this.form_elem.differential.disabled = false;
+    this.form_elem.fixed_interest.disabled = true;
+  }
+}
 
-    var validate = new Validate();
-    this.monthly_incoming(form_elem_input);
-    /*
-    switch (form_elem_type) {
-      case "money":
-        validate.monthly_incoming(form_elem_input);
-        break;
-      default://text
+Form.prototype.notifyEventForm = function(){
+    this.Notify(this);
+};
 
-    }*/
-  };
-
-
+Form.prototype.start = function(){
+  this.rateTypeFeilds();
+}
 
 var SingletonContext = (function () {
     var instance;
@@ -314,6 +328,9 @@ var SingletonContext = (function () {
 
 window.onload = function(){
   var context_ = SingletonContext.getInstance();
+
+  context_.form_.rateTypeFeilds();
+  context_.form_.form_elem.getElementById("interest_rate_type").setAttribute("onchange", function(){context_.form_.rateTypeFeilds();});
 
   var listenForm = function(event){
     event.preventDefault();
