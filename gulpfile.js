@@ -3,14 +3,14 @@ var browserify = require('gulp-browserify');
 
 gulp.task('browserify', function() {
   return gulp.
-    src('./scripts/main.js').
+    src('./javascript/main.js').
     pipe(browserify()).
     pipe(gulp.dest('./bin'));
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['./scripts/*.js',
-            './scripts/patterns/observer/*.js',
-            './scripts/patterns/singleton/*.js'],
+  gulp.watch(['./javascript/*.js',
+            './javascript/patterns/observer/*.js',
+            './javascript/patterns/singleton/*.js'],
              ['browserify']);
 });

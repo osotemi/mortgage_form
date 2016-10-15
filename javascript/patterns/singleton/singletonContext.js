@@ -1,14 +1,9 @@
-/**
- *  Singleton patter aplied to context
- */
-/*
-var context = require('./../../context');
 
 var SingletonContext = (function () {
     var instance;
 
     function createInstance() {
-        var object = new context();
+        var object = new Context();
         return object;
     }
 
@@ -21,5 +16,3 @@ var SingletonContext = (function () {
         }
     };
 })();
-*/
-module.exports = SingletonContext;
