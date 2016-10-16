@@ -41,7 +41,7 @@ function Validator( context ){
     //Si current es de RateType:
 
     //Si current es de Result:
-    
+
     if ( this.enabledResult ){
       form.calculateResult( "fixed" );
       form.enableResultFields( true );
@@ -125,14 +125,14 @@ Validator.prototype.check = function( is_valid ){
 };
 
 Validator.prototype.checkEnableResult = function(){
-
-  for ( var i = 0, len = this.validResultFields.length; i < len; i++ ) {
+  var opt = "";
+  this.enabledResult = true;
+  for ( var i in this.validResultFields ) {
       opt = this.validResultFields[i];
       if ( opt === false ) {
         this.enabledResult = false;
       }
   }
-  this.enabledResult = true;
 
 };
 
