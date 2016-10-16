@@ -9,6 +9,10 @@ function Form( form_id ){
   //Form checkBoxes elements
   this.form_checkBoxes = [];
   this.form_checkBoxesChecked = 0;
+  //current element
+  this.active_input = "";
+  this.active_type = "";
+  this.active_value = "";
 
   var self=this; //Artifici binding
   this.getFormSelf = function(){return self;};
@@ -37,6 +41,13 @@ function Form( form_id ){
 }
 
 Form.prototype = new Subject();
+
+Form.prototype.setCurrent = function(){
+  var self_form = this.getFormSelf();
+  self_form.active_type = self_form.getActiveType();
+  self_form.active_value = self_form.getActiveValue();
+  self_form.active_input = self_form.getActiveInput();
+}
 
 Form.prototype.changeRateType = function(){
   var self_form = this.getFormSelf();

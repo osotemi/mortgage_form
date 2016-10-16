@@ -25,17 +25,20 @@ include("./javascript/patterns/singleton/singletonContext.js");
 
 window.onload = function(){
   var context_ = SingletonContext.getInstance();
-
   context_.init();
+  var inputs = context_.form_.form_elem.getElementsByTagName("input");
 
-  var change_rate = function(event){
+  var changeRate = function(event){
     context_.form_.changeRateType();
   }
 
-  var set_interest_aplied = function(event){
+  var setInterestAplied = function(event){
     context_.form_.setInterestAplied();
   }
   //context_.form_.form_elem.getElementById("interest_rate_type").setAttribute("onchange", function(){context_.form_.rateTypeFeilds();});
+  var setCurrent = function(event){
+    context_.form_.setCurrent();
+  }
 
   var listenForm = function(event){
     event.preventDefault();
@@ -43,11 +46,19 @@ window.onload = function(){
     context_.start();
   }
 
-  window.addEventListener("keyup",listenForm);
-  document.getElementById('interest_rate_type').onchange = change_rate;
-  document.getElementById('homeInsurance').onchange = set_interest_aplied;
-  document.getElementById('paysheet').onchange = set_interest_aplied;
-  document.getElementById('lifeInsurance').onchange = set_interest_aplied;
+
+  for (var i = 0; i < inputs.length; i++) {
+    if (inputs[i].type != "checkbox") {
+      inputs[i].onfocus = listenForm;
+      inputs[i].onblur = listenForm;
+    }
+  }
+
+  window.addEventListener("keyup",setCurrent);
+  document.getElementById('interest_rate_type').onchange = changeRate;
+  document.getElementById('homeInsurance').onchange = setInterestAplied;
+  document.getElementById('paysheet').onchange = setInterestAplied;
+  document.getElementById('lifeInsurance').onchange = setInterestAplied;
 
   //window.addEventListener("click",change_rate);
 }

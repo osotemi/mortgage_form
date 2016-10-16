@@ -28,9 +28,9 @@ function Validator( context ){
 	this.context.form_.AddObserver(this);
 
   this.Update = function( form ){
-    this.current_element = form.getActiveInput();
-    this.current_type = form.getActiveType();
-    this.current_value =form.getActiveValue();
+    this.current_element = form.active_input;
+    this.current_type = form.active_type;
+    this.current_value =form.active_value;
 
     this.switchTypeValidate();
 
