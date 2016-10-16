@@ -25,7 +25,7 @@
 		   <div class="form-group required">
 				<label class="control-label col-sm-6">Monthly income:</label>
 				<div class="col-sm-6">
-					<input required pa-type="money" id="ingresos_mensuales" name="ingresos_mensuales" placeholder="Ingresos mensuales" type="text" class="form-control" >
+					<input required pa-type="money" id="ingresos_mensuales" name="ingresos_mensuales" placeholder="Monthly income" type="text" class="form-control" >
 				</div>
 
 			</div>
@@ -50,21 +50,21 @@
 			<div class="form-group">
 				<label class="control-label col-sm-6">EURIBOR:</label>
 				<div class="col-sm-6">
-					<input id="euribor" pa-required="interest_rate_type==variable then interestApplied+=euribor" pa-type="percentage" name="euribor" placeholder="euribor" type="text" class="form-control" >
+					<input id="euribor" pa-required="interest_rate_type==variable then interestApplied+=euribor" pa-type="dec_percentage" name="euribor" placeholder="euribor" type="text" class="form-control" >
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-sm-6">DIFFERENTIAL:</label>
 				<div class="col-sm-6">
-					<input id="differential" pa-required="interest_rate_type==variable then interestApplied+=percentage" pa-type="percentage" name="differential" placeholder="differential" type="text" class="form-control">
+					<input id="differential" pa-required="interest_rate_type==variable then interestApplied+=percentage" pa-type="dec_percentage" name="differential" placeholder="differential" type="text" class="form-control">
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-sm-6">Fixed interest rate</label>
 				<div class="col-sm-6">
-					<input id="fixed_interest" pa-required="interest_rate_type==fixed then interestApplied+=fixed_interest" pa-type="percentage" name="fixed_interest" placeholder="Fixed interest rate" type="text" class="form-control" >
+					<input id="fixed_interest" pa-required="interest_rate_type==fixed then interestApplied+=fixed_interest" pa-type="dec_percentage" name="fixed_interest" placeholder="Fixed interest rate" type="text" class="form-control" >
 				</div>
 			</div>
 
@@ -155,34 +155,39 @@
 	   </div>
 	</fieldset>
 	</div>
-        	<div class="col-sm-4">
-        	<fieldset>
+	<div class="col-sm-4">
+	<fieldset>
 
-        	       <legend class="text-info">RESULTS</legend>
-        		<div class="form-group">
-        			<label class="control-label col-sm-6">Monthly quote</label>
-        			<div class="col-sm-6">
-        				<input id="monthlyQuote" name="monthlyQuote" readonly pa-type="calculated" pa-calculus="(capital*interestApplied/12)/(100(1-Math.pow(1+((interestApplied/12)/100),(-1)*period*12))" placeholder="Monthly quote" type="text" class="form-control" >
-        			</div>
-        		</div>
-        		<div class="form-group">
-        			<label class="control-label col-sm-6">Interest rate applied</label>
-        			<div class="col-sm-6">
-        				<input id="interestApplied" name="interestApplied" readonly pa-type="calculated" pa-calculus="ACUMULATED" placeholder="Interest Applied" type="text" class="form-control">
-        			</div>
-        		</div>
-	        	<input name="Submit" pa-enabled="morgage_form==valid" type="button" value="JSON" onclick="" />
-    	    </div>
-          <div class="col-sm-4">
-             This is the end.
-          </div>
-          <div class="col-sm-4">
-            <label class="control-label col-sm-6">Interests you have to pay: </label><br>
-            <div class="col-sm-6">
-              <input id="interestToPay" name="interestToPay" readonly pa-type="calculated" pa-calculus="ACUMULATED" placeholder="Interests to pay" type="text" class="form-control">
-            </div>
-          </div>
-    	   </fieldset>
+	  <legend class="text-info">RESULTS</legend>
+		<div class="form-group">
+			<label class="control-label col-sm-6">Monthly quote</label>
+			<div class="col-sm-6">
+				<input id="monthlyQuote" name="monthlyQuote" readonly pa-type="calculated" pa-calculus="(capital*interestApplied/12)/(100(1-Math.pow(1+((interestApplied/12)/100),(-1)*period*12))" placeholder="Monthly quote" type="text" class="form-control" >
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-6">Interest rate applied</label>
+			<div class="col-sm-6">
+				<input id="interestApplied" name="interestApplied" readonly pa-type="calculated" pa-calculus="ACUMULATED" placeholder="Interest Applied" type="text" class="form-control">
+			</div>
+		</div>
+  	<input name="Submit" pa-enabled="morgage_form==valid" type="button" value="Send JSON" onclick="" />
+  </fieldset>
+  </div>
+
+  <div class="col-sm-4">
+	<fieldset>
+  <legend class="text-info">More Info</legend>
+    <div class="form-group">
+      <label class="control-label col-sm-6">Interests you have to pay: </label><br>
+      <div class="col-sm-6">
+        <input id="interestToPay" name="interestToPay" readonly pa-type="calculated" pa-calculus="ACUMULATED" placeholder="Interests to pay" type="text" class="form-control">
+      </div>
+    </div>
+  </fieldset>
+  </div>
+
+
 
 		</form>
 

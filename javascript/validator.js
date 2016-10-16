@@ -32,7 +32,7 @@ function Validator( context ){
     this.current_type = form.getActiveType();
     this.current_value =form.getActiveValue();
 
-    this.switchType();
+    this.switchTypeValidate();
 
     //Si current es de RateType:
 
@@ -56,11 +56,10 @@ function Validator( context ){
   }
 }
 
-Validator.prototype.money = function(  ){
+Validator.prototype.paTypeValidate = function( pattern ){
   var current_element = document.activeElement;
-  var money_pattern = /^[\d]{0,9}[.]?([\d]{1,2}?)$/;//float personal regular expresion
 
-  if (  this.current_value == "Ingresos mensuales" ){
+  if (  this.current_value == ("Monthly income" || "capital" || "euribor" || "differential" || "Fixed interest rate" || "How many years?" )){
      this.current_element.value = "";
      this.valid = false;
   }
@@ -70,7 +69,7 @@ Validator.prototype.money = function(  ){
     this.valid = false;
   }
   else{
-    if(!money_pattern.test(this.current_value)){
+    if(!pattern.test(this.current_value)){
        this.current_element.style.border = "1px solid red";
        this.current_element.focus();
        this.valid = false;
@@ -78,58 +77,6 @@ Validator.prototype.money = function(  ){
     else{
       this.current_element.style.border = "2px solid green";
       this.valid = true;
-    }
-  }
-};
-
-Validator.prototype.percentage = function(  ){
-  var current_element = document.activeElement;
-  var dec_pattern = /^\-?[\d]{0,1}[.]?([\d]{1,3}?)$/;//float personal percentage ([9.999 , -9.999] range) regular expresion
-
-  if (  this.current_value == ("euribor" || "differential" || "Fixed interest rate" )){
-     this.current_element.value = "";
-     this.valid = false;
-  }
-  else if( this.current_value == "" ){
-    this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
-    this.valid = false;
-  }
-  else{
-    if(!dec_pattern.test(this.current_value)){
-       this.current_element.style.border = "1px solid red";
-       this.current_element.focus();
-       this.valid = false;
-    }
-    else{
-      this.current_element.style.border = "2px solid green";
-      this.valid = true;
-    }
-  }
-};
-
-Validator.prototype.number = function(  ){
-  var current_element = document.activeElement;
-  var num_pattern = /^[\d]{0,2}$/;//float personal percentage ([9.999 , -9.999] range) regular expresion
-
-  if (  this.current_value == "How many years?"){
-     this.current_element.value = "";
-     return false;
-  }
-  else if( this.current_value == "" ){
-    this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
-    return false;
-  }
-  else{
-    if( ! num_pattern.test(this.current_value) ){
-       this.current_element.style.border = "1px solid red";
-       this.current_element.focus();
-       return false;
-    }
-    else{
-      this.current_element.style.border = "2px solid green";
-      return true;
     }
   }
 };
@@ -184,19 +131,30 @@ Validator.prototype.checkEnableResult = function(){
 
 };
 
-Validator.prototype.switchType = function(){
+Validator.prototype.switchTypeValidate = function(){
   //validate.monthly_incoming(form_elem_input);
+  //patterns
+  var money_pattern = /^[\d]{0,9}[.]?([\d]{1,2}?)$/;//float personal regular expresion
+  var dec_pattern = /^\-?[\d]{0,1}[.]?([\d]{1,3}?)$/;//float personal percentage ([9.999 , -9.999] range) regular expresion
+  var num_pattern = /^[\d]{1,2}$/;//float personal number ([ 10 - 99 ] range) regular expresion
 
   switch (this.current_type) {
     case "money":
-      this.check(this.money());
-
+      this.check(this.paTypeValidate( money_pattern ));
       break;
     case "dec_percentage":
-      this.check(this.percentage());
+      this.check(this.paTypeValidate( dec_pattern ));
       break;
     case "number":
-      this.check(this.number());
+      this.check(this.paTypeValidate( num_pattern ));
+      break;
+    case "nif":
+      break;
+    case "age":
+      break;
+    case "mobile":
+      break;
+    case "email":
       break;
     default://text
       break;
