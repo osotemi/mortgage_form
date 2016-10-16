@@ -109,7 +109,7 @@ Form.prototype.setInterestAplied = function(){
 
 }
 
-Form.prototype.calculateResult = function( interest_type ){
+Form.prototype.calculateResult = function(){
   var self_form = this.getFormSelf();
   var cuota_mensual = 0;
   var income = parseInt(parseFloat(self_form.form_elem.ingresos_mensuales.value) * 100);

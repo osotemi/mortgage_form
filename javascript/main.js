@@ -49,7 +49,8 @@ window.onload = function(){
 
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].type != "checkbox") {
-      inputs[i].onfocus = listenForm;
+      inputs[i].onfocus = setCurrent;
+      //inputs[i].onfocus = listenForm;
       inputs[i].onblur = listenForm;
     }
   }

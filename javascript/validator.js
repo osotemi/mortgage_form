@@ -43,21 +43,11 @@ function Validator( context ){
     //Si current es de Result:
 
     if ( this.enabledResult ){
-      form.calculateResult( "fixed" );
+      form.calculateResult();
       form.enableResultFields( true );
     }
     //Si current es de required:
 
-    /*
-    if( this.valid_ingresos &&  this.valid_capital && this.valid_period ){
-      if( this.valid_fix_interest ){
-        form.calculateResult( "fixed" );
-      }
-      else if (this.valid_){
-        form.calculateResult(  );
-      }
-    }
-    */
   }
 }
 
@@ -70,13 +60,13 @@ Validator.prototype.paTypeValidate = function( pattern ){
   }
   else if( this.current_value == "" ){
     this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
+    //this.current_element.focus();
     this.valid = false;
   }
   else{
     if(!pattern.test(this.current_value)){
        this.current_element.style.border = "1px solid red";
-       this.current_element.focus();
+       //this.current_element.focus();
        this.valid = false;
     }
     else{
@@ -142,6 +132,9 @@ Validator.prototype.switchTypeValidate = function(){
   var money_pattern = /^[\d]{0,9}[.]?([\d]{1,2}?)$/;//float personal regular expresion
   var dec_pattern = /^\-?[\d]{0,1}[.]?([\d]{1,3}?)$/;//float personal percentage ([9.999 , -9.999] range) regular expresion
   var num_pattern = /^[\d]{1,2}$/;//float personal number ([ 10 - 99 ] range) regular expresion
+  var text_pattern = /^[\D]{2,50}$/;
+  var phone_pattern = /^(\+\d{2,3}\s)?[689]{1}\d{2}[\s]?\d{3}[\s]?\d{3}$/;// acept 666666666 <-> 666 666 666 <-> +34 666 666 666 <-> +34 666666666
+  var email_pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/;//
 
   switch (this.current_type) {
     case "money":
@@ -154,15 +147,77 @@ Validator.prototype.switchTypeValidate = function(){
       this.check(this.paTypeValidate( num_pattern ));
       break;
     case "nif":
+      this.validateNIF();
       break;
     case "age":
+      this.validateAge();
       break;
     case "mobile":
+      check(this.paTypeValidate( phone_pattern ));
       break;
     case "email":
+      check(this.paTypeValidate( email_pattern ));
       break;
     default://text
+      this.check(this.paTypeValidate( text_pattern ));
       break;
   }
   this.checkEnableResult();
+};
+
+Validator.prototype.validateAge = function(){
+  var age_pattern = /^\d{2}$/;
+  var age = this.current_value;
+
+  if ( dni.match(age_pattern) ){
+    //Error pattern
+    this.current_element.style.border = "1px solid red";
+    this.current_element.focus();
+  }
+  else if (age < 18){
+    //Error too young
+    this.current_element.style.border = "1px solid red";
+    this.current_element.focus();
+  }
+  else if ( age > 65 ){
+    //Error too old
+    this.current_element.style.border = "1px solid red";
+    this.current_element.focus();
+  }
+  else{
+    //OK
+    this.current_element.style.border = "2px solid green";
+  }
+};
+
+Validator.prototype.validateNIF = function(){
+  var num ="";
+  var char ="";
+  var ctr_char ="";
+  var nif_pattern = /^[0-9]{8}[A-Za-z]{1}$/;
+  var controlstr = "TRWAGMYFPDXBNJZSQVHLCKET";
+  var dni = this.current_value;
+
+  if ( dni.match(nif_pattern)){
+    num = dni.substr( 0, dni.length -1 );
+    char = dni.substr( dni.length -1, 1 );
+    num = num % 23;
+    ctr_char = controlstr.substring( num, num+1 );
+
+    if( ctr_char != char.toUpperCase() ){
+      this.current_element.style.border = "1px solid red";
+      this.current_element.focus();
+      return false;
+    }
+    else{
+      this.current_element.style.border = "2px solid green";
+      return true;
+    }
+  }
+  else{
+    this.current_element.style.border = "1px solid red";
+    this.current_element.focus();
+    return false;
+  }
+
 };
