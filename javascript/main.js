@@ -32,6 +32,9 @@ window.onload = function(){
     context_.form_.changeRateType();
   }
 
+  var set_interest_aplied = function(event){
+    context_.form_.setInterestAplied();
+  }
   //context_.form_.form_elem.getElementById("interest_rate_type").setAttribute("onchange", function(){context_.form_.rateTypeFeilds();});
 
   var listenForm = function(event){
@@ -42,5 +45,9 @@ window.onload = function(){
 
   window.addEventListener("keyup",listenForm);
   document.getElementById('interest_rate_type').onchange = change_rate;
+  document.getElementById('homeInsurance').onchange = set_interest_aplied;
+  document.getElementById('paysheet').onchange = set_interest_aplied;
+  document.getElementById('lifeInsurance').onchange = set_interest_aplied;
+
   //window.addEventListener("click",change_rate);
 }

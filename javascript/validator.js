@@ -34,9 +34,14 @@ function Validator( context ){
 
     this.switchTypeValidate();
 
+    //Si current es de interest rate type
+    if( this.current_type == "dec_percentage" ){
+      form.setInterestAplied();
+    }
     //Si current es de RateType:
 
     //Si current es de Result:
+    
     if ( this.enabledResult ){
       form.calculateResult( "fixed" );
       form.enableResultFields( true );
