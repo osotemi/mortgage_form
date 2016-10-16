@@ -26,11 +26,12 @@ include("./javascript/patterns/singleton/singletonContext.js");
 window.onload = function(){
   var context_ = SingletonContext.getInstance();
 
-  context_.form_.start();
-  
+  context_.init();
+
   var change_rate = function(event){
-    context_.form_.rateTypeFeilds();
+    context_.form_.changeRateType();
   }
+
   //context_.form_.form_elem.getElementById("interest_rate_type").setAttribute("onchange", function(){context_.form_.rateTypeFeilds();});
 
   var listenForm = function(event){
@@ -40,5 +41,6 @@ window.onload = function(){
   }
 
   window.addEventListener("keyup",listenForm);
-  window.addEventListener("click",change_rate);
+  document.getElementById('interest_rate_type').onchange = change_rate;
+  //window.addEventListener("click",change_rate);
 }

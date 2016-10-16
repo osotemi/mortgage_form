@@ -13,29 +13,29 @@ function Form( form_id ){
 
   Subject.call(this.prototype);
 
-
 }
 
 Form.prototype = new Subject();
 
-Form.prototype.rateTypeFeilds = function(){
-  var rate_types = this.getInterestRate();
+Form.prototype.changeRateType = function(){
+  var self_form = this.getFormSelf();
+  var rate_type = self_form.getRateType();
 
-  if( rate_types == "fixed"){
-    this.form_elem.fixed_interest.disabled = false;
-    this.form_elem.euribor.disabled = true;
-    this.form_elem.differential.disabled = true;
-    this.fixed_enabled = true;
+  if( rate_type == "fixed"){
+    self_form.form_elem.fixed_interest.disabled = false;
+    self_form.form_elem.euribor.disabled = true;
+    self_form.form_elem.differential.disabled = true;
+    self_form.fixed_enabled = true;
   }
   else {
-    this.form_elem.euribor.disabled = false;
-    this.form_elem.differential.disabled = false;
-    this.form_elem.fixed_interest.disabled = true;
-    this.fixed_enabled = false;
+    self_form.form_elem.euribor.disabled = false;
+    self_form.form_elem.differential.disabled = false;
+    self_form.form_elem.fixed_interest.disabled = true;
+    self_form.fixed_enabled = false;
   }
 }
 
-Form.prototype.getInterestRate = function(){
+Form.prototype.getRateType = function(){
   var self_form = this.getFormSelf();
   var selected_interest = this.getSelectElement();
   var opt;
@@ -47,7 +47,6 @@ Form.prototype.getInterestRate = function(){
       }
   }
   return false;
-
 }
 
 Form.prototype.notifyEventForm = function(){
@@ -62,5 +61,6 @@ Form.prototype.start = function(){
 }
 
 Form.prototype.init = function(){
-
+  var self_form = this.getFormSelf();
+  document.getElementById('interest_rate_type').onchange = self_form.changeRateType;
 }
