@@ -35,9 +35,13 @@ window.onload = function(){
   var setInterestAplied = function(event){
     context_.form_.setInterestAplied();
   }
-  
+
   var setCurrent = function(event){
     context_.form_.setCurrent();
+  }
+
+  var submitForm = function(event){
+    context_.submitForm();
   }
 
   var listenForm = function(event){
@@ -61,6 +65,6 @@ window.onload = function(){
   document.getElementById('homeInsurance').onchange = setInterestAplied;
   document.getElementById('paysheet').onchange = setInterestAplied;
   document.getElementById('lifeInsurance').onchange = setInterestAplied;
-
+  document.getElementById('Submit').onclick = submitForm;
   //window.addEventListener("click",change_rate);
 }

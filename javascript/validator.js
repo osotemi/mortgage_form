@@ -4,7 +4,9 @@ function Validator( context ){
 
   this.context = context;
   //If the result can be calculated
-  this.enabledResult = false;
+  this.enabled_result = false;
+  //Fi is valid form
+  this.is_valid_form = false;
   //Mistake variables
   this.current_errorType = "";// EMPTY; PATTERN; SPECIAL;
   this.current_errorMessege = "";
@@ -51,11 +53,8 @@ function Validator( context ){
     if( this.current_type == "dec_percentage" ){
       form.setInterestAplied();
     }
-    //Si current es de RateType:
-
     //Si current es de Result:
-
-    if ( this.enabledResult ){
+    if ( this.enabled_result ){
       form.calculateResult();
       form.enableResultFields( true );
     }
@@ -83,6 +82,7 @@ Validator.prototype.paTypeValidate = function( pattern ){
       return false;
     }
     else{
+      this.current_errorType = "";
       this.current_element.style.border = "1px solid grey";
       return true;
     }
@@ -129,14 +129,31 @@ Validator.prototype.check = function( is_valid ){
 
 Validator.prototype.checkEnableResult = function(){
   var opt = "";
-  this.enabledResult = true;
+  this.enabled_result = true;
   for ( var i in this.validResultFields ) {
       opt = this.validResultFields[i];
       if ( opt === false ) {
-        this.enabledResult = false;
+        this.enabled_result = false;
       }
   }
 
+};
+//Function validate form
+Validator.prototype.validFormResult = function(){
+  var opt = "";
+  this.is_valid_form = true;
+  for ( var i in this.validRequired ) {
+      opt = this.validRequired[i];
+      if ( opt === false ) {
+        this.is_valid_form = false;
+      }
+  }
+  if(this.is_valid_form){
+    this.checkEnableResult();
+    if(!this.enabled_result){
+      this.is_valid_form = false;
+    }
+  }
 };
 
 Validator.prototype.switchTypeValidate = function(){
@@ -221,7 +238,7 @@ Validator.prototype.validateAge = function(){
     //OK
     this.current_errorType = "";
     this.current_element.style.border = "1px solid grey";
-    return false;
+    return true;
   }
 };
 
@@ -240,16 +257,20 @@ Validator.prototype.validateNIF = function(){
     ctr_char = controlstr.substring( num, num+1 );
 
     if( ctr_char != char.toUpperCase() ){
+      this.current_errorType = "SPECIAL";
+      this.current_errorMessege = "This isn't a well-form dni";
       this.current_element.style.border = "1px solid red";
-      this.current_element.focus();
       return false;
     }
     else{
-      this.current_element.style.border = "2px solid green";
+      this.current_errorType = "";
+      this.current_element.style.border = "1px solid grey";
       return true;
     }
   }
   else{
+    this.current_errorType = "PATTERN";
+    this.current_errorMessege = "This input dni is not valid";
     this.current_element.style.border = "1px solid red";
     return false;
   }
