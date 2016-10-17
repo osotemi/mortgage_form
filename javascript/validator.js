@@ -3,8 +3,11 @@ function Validator( context ){
   this.valid = "";
 
   this.context = context;
-
+  //If the result can be calculated
   this.enabledResult = false;
+  //Mistake variables
+  this.current_errorType = "";// EMPTY; PATTERN; SPECIAL;
+  this.current_errorMessege = "";
 
   this.validResultFields = {
     valid_incoming : false,
@@ -33,6 +36,13 @@ function Validator( context ){
     this.current_value =form.active_value;
 
     this.switchTypeValidate();
+
+    if ( this.current_errorType != ""){
+        form.setError( this.current_errorType, this.current_errorMessege );
+    }
+    else {
+        form.removeError();
+    }
 
     //Si current es de interest rate type
     if( this.current_type == "dec_percentage" ){
@@ -169,24 +179,32 @@ Validator.prototype.validateAge = function(){
   var age_pattern = /^\d{2}$/;
   var age = this.current_value;
 
-  if ( dni.match(age_pattern) ){
+  if ( age == "" || age == "Don't lie"){
+    this.current_errorType = "";
+    this.current_element.style.border = "1px solid grey";
+  }
+  else if ( !age.match(age_pattern) ){
     //Error pattern
+    this.current_errorType = "PATTERN";
+    this.current_errorMessege = "This input can't be an age";
     this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
   }
   else if (age < 18){
     //Error too young
+    this.current_errorType = "SPECIAL";
+    this.current_errorMessege = "Too young to get a morge";
     this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
   }
   else if ( age > 65 ){
     //Error too old
+    this.current_errorType = "SPECIAL";
+    this.current_errorMessege = "Too old to get a morge";
     this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
   }
   else{
     //OK
-    this.current_element.style.border = "2px solid green";
+    this.current_errorType = "";
+    this.current_element.style.border = "1px solid grey";
   }
 };
 

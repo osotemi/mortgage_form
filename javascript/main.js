@@ -42,20 +42,20 @@ window.onload = function(){
 
   var listenForm = function(event){
     event.preventDefault();
-
+    setCurrent();
     context_.start();
   }
 
 
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].type != "checkbox") {
-      inputs[i].onfocus = setCurrent;
+      //inputs[i].onfocus = setCurrent;
       //inputs[i].onfocus = listenForm;
       inputs[i].onblur = listenForm;
     }
   }
 
-  window.addEventListener("keyup",setCurrent);
+  window.addEventListener("keyup",listenForm);
   document.getElementById('interest_rate_type').onchange = changeRate;
   document.getElementById('homeInsurance').onchange = setInterestAplied;
   document.getElementById('paysheet').onchange = setInterestAplied;

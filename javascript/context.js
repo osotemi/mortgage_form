@@ -15,7 +15,6 @@ Context.prototype.start = function(){
 //Initiates the form context
 Context.prototype.init = function(){
   //Rate Inmputs handler
-  this.form_.init();
   this.form_.changeRateType();
   document.mortgage_form.ingresos_mensuales.focus();
 };

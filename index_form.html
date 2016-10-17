@@ -5,12 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <style>
-  	.form-group.required .control-label:after {
-   		content:"*";
-   		color:red;
-	}
-  </style>
+  <link rel="stylesheet" href="css/style.css">
+
   <script type="text/javascript" src="javascript/main.js"></script>
 </head>
     <body>
@@ -24,7 +20,7 @@
 		   <legend class="text-info">Economic data</legend>
 		   <div class="form-group required">
 				<label class="control-label col-sm-6">Monthly income:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="label_income">
 					<input required pa-type="money" id="ingresos_mensuales" name="ingresos_mensuales" placeholder="Monthly income" type="text" class="form-control" >
 				</div>
 
@@ -108,12 +104,15 @@
 		</div>
 	<div class="form-group">
 				<label class="control-label col-sm-6">AGE:</label>
-				<div class="col-sm-6">
-				<input id="age" name="age" pa-type="age" pa-range="min:18;max:100" placeholder="Don't lie" type="text" class="form-control" value=>
+				<div class="col-sm-6" id="age_div">
+				<input id="age" name="age" pa-type="age" pa-range="min:18;max:100" placeholder="Don't lie" type="text" class="form-control" value >
+
 		</div>
 
 			</div>
+
 			<div class="form-group">
+        
 				<label class="control-label col-sm-6">MOBILE:</label>
 				<div class="col-sm-6">
 				<input id="mobile" pa-type="phone" name="mobile" placeholder="Mobile number" type="text" class="form-control">

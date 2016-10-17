@@ -19,6 +19,7 @@ function Form( form_id ){
   this.getActiveInput = function(){return document.activeElement;};
   this.getActiveType = function(){return document.activeElement.getAttribute("pa-type");};
   this.getActiveValue = function(){return document.activeElement.value;};
+  this.getActiveId = function(){return document.activeElement.getAttribute("id");};
   this.getSelectElement = function(){return document.getElementById("interest_rate_type");};
   this.setCheckboxes = function(){
     var inputs = this.form_elem.getElementsByTagName("input");
@@ -48,6 +49,80 @@ Form.prototype.setCurrent = function(){
   self_form.active_value = self_form.getActiveValue();
   self_form.active_input = self_form.getActiveInput();
 }
+
+Form.prototype.setError = function( error_type, error_msage ){
+  var self_form = this.getFormSelf();
+  var elem_id = self_form.active_type;
+  var element = document.getElementById(elem_id + "_div");
+  error_message_id = elem_id +"_error_message";
+  //reinicialice error div
+  try{
+    this.removeError();
+  }catch(e){
+
+  }
+  var child = document.createElement('div');
+  child.setAttribute( 'id', error_message_id);
+  child.setAttribute( 'class', 'msg');
+  child.setAttribute( 'display', 'block');
+
+  if( error_type == "EMPTY" ){
+    child.innerHTML = "This field can't be empty";
+    element.appendChild( child);
+  }
+  else if( error_type == "PATTERN" ){
+    child.innerHTML = error_msage;
+    element.appendChild( child);
+  }
+  else if( error_type == "SPECIAL" ){
+    child.innerHTML = error_msage;
+    element.appendChild( child);
+  }
+};
+
+Form.prototype.removeError = function( error_type, error_msage ){
+  var self_form = this.getFormSelf();
+  var elem_id = self_form.active_type;
+  var element = document.getElementById(elem_id + "_div");
+  var error_elem = document.getElementById( elem_id + "_error_message" );
+  element.removeChild( error_elem );
+};
+
+Form.prototype.setInterestAplied = function(){
+  var self_form = this.getFormSelf();
+  var interest = 0;
+
+  self_form.setCheckboxes();
+  var active_products = self_form.form_checkBoxesChecked;
+
+  if(self_form.rate_type_selected == "fixed"){
+    interest = parseInt(parseFloat(self_form.form_elem.fixed_interest.value) * 1000);
+    interest -= active_products * 50;
+  }
+  else{
+    var euribor = parseInt(parseFloat(self_form.form_elem.euribor.value) * 1000);
+    var differential = parseInt(parseFloat(self_form.form_elem.differential.value) * 1000);
+    interest = parseInt(euribor) + parseInt(differential);
+    interest -= active_products * 50;
+  }
+  self_form.interest_aplied = interest;
+  self_form.form_elem.interestApplied.value = (interest/1000) || 0;
+
+};
+
+Form.prototype.calculateResult = function(){
+  var self_form = this.getFormSelf();
+  var cuota_mensual = 0;
+  var income = parseInt(parseFloat(self_form.form_elem.ingresos_mensuales.value) * 100);
+  var capital = parseInt(parseFloat(self_form.form_elem.capital.value) * 100);
+  var period = parseInt(self_form.form_elem.period.value);
+
+  //cuota_mensual = parseInt((((capital/100) * (interest/1000) / 12) / (100 * ( 1- Math.round(Math.pow(1 + (( (interest / 1000) / 12 )/100 ) , (-1 * period * 12))) ))) * 100);
+  cuota_mensual = parseInt(( ((capital/100) * (self_form.interest_aplied/1000) / 12) / (100 * ( 1- Math.round(Math.pow(1 + (( (self_form.interest_aplied / 1000) / 12 )/100 ) , (-1 * period * 12))) ))) * 100);
+  self_form.form_elem.monthlyQuote.value = cuota_mensual/100;
+
+  self_form.form_elem.interestToPay.value = (((cuota_mensual * period * 12) - income) /100);
+};
 
 Form.prototype.changeRateType = function(){
   var self_form = this.getFormSelf();
@@ -87,42 +162,6 @@ Form.prototype.enableResultFields = function( enable ){
   }
 }
 
-Form.prototype.setInterestAplied = function(){
-  var self_form = this.getFormSelf();
-  var interest = 0;
-
-  self_form.setCheckboxes();
-  var active_products = self_form.form_checkBoxesChecked;
-
-  if(self_form.rate_type_selected == "fixed"){
-    interest = parseInt(parseFloat(self_form.form_elem.fixed_interest.value) * 1000);
-    interest -= active_products * 50;
-  }
-  else{
-    var euribor = parseInt(parseFloat(self_form.form_elem.euribor.value) * 1000);
-    var differential = parseInt(parseFloat(self_form.form_elem.differential.value) * 1000);
-    interest = parseInt(euribor) + parseInt(differential);
-    interest -= active_products * 50;
-  }
-  self_form.interest_aplied = interest;
-  self_form.form_elem.interestApplied.value = (interest/1000) || 0;
-
-}
-
-Form.prototype.calculateResult = function(){
-  var self_form = this.getFormSelf();
-  var cuota_mensual = 0;
-  var income = parseInt(parseFloat(self_form.form_elem.ingresos_mensuales.value) * 100);
-  var capital = parseInt(parseFloat(self_form.form_elem.capital.value) * 100);
-  var period = parseInt(self_form.form_elem.period.value);
-
-  //cuota_mensual = parseInt((((capital/100) * (interest/1000) / 12) / (100 * ( 1- Math.round(Math.pow(1 + (( (interest / 1000) / 12 )/100 ) , (-1 * period * 12))) ))) * 100);
-  cuota_mensual = parseInt(( ((capital/100) * (self_form.interest_aplied/1000) / 12) / (100 * ( 1- Math.round(Math.pow(1 + (( (self_form.interest_aplied / 1000) / 12 )/100 ) , (-1 * period * 12))) ))) * 100);
-  self_form.form_elem.monthlyQuote.value = cuota_mensual/100;
-
-  self_form.form_elem.interestToPay.value = (((cuota_mensual * period * 12) - income) /100);
-};
-
 Form.prototype.notifyEventForm = function(){
     this.Notify(this);
 };
@@ -132,9 +171,4 @@ Form.prototype.start = function(){
   var selec_input = this.getSelectElement();
   //Initiate form Interest Rate fields
   this.rateTypeFeilds();
-}
-
-Form.prototype.init = function(){
-
-
 }
