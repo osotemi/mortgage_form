@@ -20,8 +20,8 @@
 		   <legend class="text-info">Economic data</legend>
 		   <div class="form-group required">
 				<label class="control-label col-sm-6">Monthly income:</label>
-				<div class="col-sm-6" id="ingresos_mensuales_div">
-					<input required pa-type="money" id="ingresos_mensuales" name="ingresos_mensuales" placeholder="Monthly income" type="text" class="form-control" >
+				<div class="col-sm-6" id="monthly_income_div">
+					<input required pa-type="money" id="monthly_income" name="monthly_income" placeholder="Monthly income" type="text" class="form-control" >
 				</div>
 
 			</div>
@@ -86,7 +86,7 @@
 			<div class="form-group required">
 				<label class="control-label col-sm-6">NAME:</label>
 		<div class="col-sm-6" id="name_div">
-					<input id="nombre" name="name" required pa-type="text" placeholder="Name" type="text" class="form-control" value=>
+					<input id="name" name="name" required pa-type="text" placeholder="Name" type="text" class="form-control" value=>
 		</div>
 			</div>
 			<div class="form-group required">
@@ -183,7 +183,7 @@
         <input id="interestToPay" name="interestToPay" readonly pa-type="calculated" pa-calculus="ACUMULATED" placeholder="Interests to pay" type="text" class="form-control">
       </div>
     </div>
-    <input name="Submit" pa-enabled="morgage_form==valid" type="button" value="Send JSON" onclick="" />
+    <input id="Submit" name="Submit" pa-enabled="morgage_form==valid" type="button" value="Send JSON" onclick="" />
   </fieldset>
   </div>
 

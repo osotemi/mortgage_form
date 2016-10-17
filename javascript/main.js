@@ -28,20 +28,22 @@ window.onload = function(){
   context_.init();
   var inputs = context_.form_.form_elem.getElementsByTagName("input");
 
-  var changeRate = function(event){
+  var changeRate = function(){
     context_.form_.changeRateType();
   }
 
-  var setInterestAplied = function(event){
+  var setInterestAplied = function(){
     context_.form_.setInterestAplied();
+
   }
 
   var setCurrent = function(event){
+    event.preventDefault();
     context_.form_.setCurrent();
   }
 
-  var submitForm = function(event){
-    context_.submitForm();
+  var submitForm = function(){
+    return context_.submitForm();
   }
 
   var listenForm = function(event){
@@ -61,10 +63,15 @@ window.onload = function(){
 
   //I have to use addEventListener becouse the onfocus gives troubles with
   window.addEventListener("keyup",setCurrent);
+
   document.getElementById('interest_rate_type').onchange = changeRate;
   document.getElementById('homeInsurance').onchange = setInterestAplied;
   document.getElementById('paysheet').onchange = setInterestAplied;
   document.getElementById('lifeInsurance').onchange = setInterestAplied;
   document.getElementById('Submit').onclick = submitForm;
+  //Avoid undefined elemen at first onfocus
+  document.getElementById('monthly_income').onclick = "";
+  //Avoid mail validate error
+  document.getElementById('email').onclick = setCurrent;
   //window.addEventListener("click",change_rate);
 }

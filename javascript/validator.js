@@ -1,10 +1,17 @@
-
+/*
+ * Validator prototype
+ *
+ * @constructor
+ * @this {Stick}
+ *
+ */
 function Validator( context ){
   this.valid = "";
 
   this.context = context;
   //If the result can be calculated
   this.enabled_result = false;
+  this.change_result_field = false;
   //Fi is valid form
   this.is_valid_form = false;
   //Mistake variables
@@ -54,29 +61,30 @@ function Validator( context ){
       form.setInterestAplied();
     }
     //Si current es de Result:
-    if ( this.enabled_result ){
+    if ( this.enabled_result && this.change_result_field ){
       form.calculateResult();
       form.enableResultFields( true );
     }
-    //Si current es de required:
-
+    else{
+      //form.enableResultFields( false );
+    }
   }
 }
 
 Validator.prototype.paTypeValidate = function( pattern ){
-
-  if (  this.current_value == ("Monthly income" || "capital" || "euribor" || "differential" || "Fixed interest rate" || "How many years?" )){
+  var value = this.current_value;
+  if (  value == ("Monthly income" || "capital" || "euribor" || "differential" || "Fixed interest rate" || "How many years?" )){
      this.current_element.value = "";
      return false;
   }
-  else if( this.current_value == "" && this.current_element.required ){
-    this.current_errorType = "This field can't be empty";
+  else if( value == "" && this.current_element.required ){
+    this.current_errorType = "EMPTY";
     this.current_element.style.border = "1px solid red";
     //this.current_element.focus();
     return false;
   }
   else{
-    if(!pattern.test(this.current_value)){
+    if(!pattern.test(value)){
       this.current_errorType = "PATTERN";
       this.current_element.style.border = "1px solid red";
       return false;
@@ -91,11 +99,13 @@ Validator.prototype.paTypeValidate = function( pattern ){
 
 Validator.prototype.check = function( is_valid ){
   switch (this.current_element.id) {
-    case "ingresos_mensuales":
+    case "monthly_income":
       this.validResultFields.valid_incoming = is_valid;
+      this.change_result_field = true;
       break;
     case "capital":
       this.validResultFields.valid_capital = is_valid;
+      this.change_result_field = true;
       break;
     case "euribor":
       this.validInterestRate.valid_euribor = is_valid;
@@ -105,6 +115,7 @@ Validator.prototype.check = function( is_valid ){
       else{
         this.validResultFields.valid_interest = false;
       }
+      this.change_result_field = true;
       break;
     case "differential":
       this.validInterestRate.valid_differencial = is_valid;
@@ -114,21 +125,38 @@ Validator.prototype.check = function( is_valid ){
       else{
         this.validResultFields.valid_interest = false;
       }
+      this.change_result_field = true;
       break;
     case "fixed_interest":
       this.validInterestRate.valid_fixed = is_valid;
       this.validResultFields.valid_interest = is_valid;
+      this.change_result_field = true;
       break;
     case "period":
       this.validResultFields.valid_peiod = is_valid;
+      this.change_result_field = true;
+      break;
+    case "nif":
+      this.validRequired.valid_dni = is_valid;
+      break;
+    case "name":
+      this.validRequired.valid_name = is_valid;
+      break;
+    case "surname1":
+      this.validRequired.valid_surname = is_valid;
+      break;
+    case "email":
+      this.validRequired.valid_email = is_valid;
+      break;
     default://text
-      this.valid = is_valid;
+      //this.valid = is_valid;
   }
 
 };
 
 Validator.prototype.checkEnableResult = function(){
   var opt = "";
+  this.change_result_field = true;
   this.enabled_result = true;
   for ( var i in this.validResultFields ) {
       opt = this.validResultFields[i];
@@ -164,7 +192,7 @@ Validator.prototype.switchTypeValidate = function(){
   var num_pattern = /^[\d]{1,2}$/;//float personal number ([ 10 - 99 ] range) regular expresion
   var text_pattern = /^[\D]{2,50}$/;
   var phone_pattern = /^(\+\d{2,3}\s)?[689]{1}\d{2}[\s]?\d{3}[\s]?\d{3}$/;// acept 666666666 <-> 666 666 666 <-> +34 666 666 666 <-> +34 666666666
-  var email_pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/;//
+  var email_pattern = /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;//simple mail pattern
 
   switch (this.current_type) {
     case "money":
@@ -186,19 +214,28 @@ Validator.prototype.switchTypeValidate = function(){
       }
       break;
     case "nif":
-      this.validateNIF();
+      this.check(this.validateNIF());
       break;
     case "age":
       this.validateAge();
       break;
     case "mobile":
-      check(this.paTypeValidate( phone_pattern ));
+      this.check(this.paTypeValidate( phone_pattern ));
+      if( this.current_errorType == "PATTERN" ){
+        this.current_errorMessege = "The must be on +34 666 666 666 ";
+      }
       break;
     case "email":
-      check(this.paTypeValidate( email_pattern ));
+      this.check(this.paTypeValidate( email_pattern ));
+      if( this.current_errorType == "PATTERN" ){
+        this.current_errorMessege = "Email must be on mail@mail.com";
+      }
       break;
     default://text
       this.check(this.paTypeValidate( text_pattern ));
+      if( this.current_errorType == "PATTERN" ){
+        this.current_errorMessege = "Only characters allowed";
+      }
       break;
   }
   this.checkEnableResult();
@@ -250,7 +287,12 @@ Validator.prototype.validateNIF = function(){
   var controlstr = "TRWAGMYFPDXBNJZSQVHLCKET";
   var dni = this.current_value;
 
-  if ( dni.match(nif_pattern)){
+  if( dni == "" ){
+    this.current_errorType = "EMPTY";
+
+    this.current_element.style.border = "1px solid red";
+  }
+  else if ( dni.match(nif_pattern)){
     num = dni.substr( 0, dni.length -1 );
     char = dni.substr( dni.length -1, 1 );
     num = num % 23;

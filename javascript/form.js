@@ -1,4 +1,10 @@
-
+/**
+ * prototype form
+ *
+ * @constructor
+ * @this {Artifact}
+  *
+ */
 function Form( form_id ){
   //get form element
   this.form_id = form_id;
@@ -111,13 +117,13 @@ Form.prototype.setInterestAplied = function(){
   }
   self_form.interest_aplied = interest;
   self_form.form_elem.interestApplied.value = (interest/1000) || 0;
-
+  this.notifyEventForm();
 };
 
 Form.prototype.calculateResult = function(){
   var self_form = this.getFormSelf();
   var cuota_mensual = 0;
-  var income = parseInt(parseFloat(self_form.form_elem.ingresos_mensuales.value) * 100);
+  var income = parseInt(parseFloat(self_form.form_elem.monthly_income.value) * 100);
   var capital = parseInt(parseFloat(self_form.form_elem.capital.value) * 100);
   var period = parseInt(self_form.form_elem.period.value);
 
@@ -144,16 +150,16 @@ Form.prototype.changeRateType = function(){
     self_form.form_elem.fixed_interest.disabled = false;
 
     self_form.form_elem.euribor.disabled = true;
-    self_form.form_elem.euribor.value = 0;
+    self_form.form_elem.euribor.value = "";
     self_form.form_elem.differential.disabled = true;
-    self_form.form_elem.differential.value = 0;
+    self_form.form_elem.differential.value = "";
     self_form.fixed_enabled = true;
   }
   else {
     self_form.form_elem.euribor.disabled = false;
     self_form.form_elem.differential.disabled = false;
     self_form.form_elem.fixed_interest.disabled = true;
-    self_form.form_elem.fixed_interest.value = 0;
+    self_form.form_elem.fixed_interest.value = "";
     self_form.fixed_enabled = false;
   }
 }
@@ -165,6 +171,8 @@ Form.prototype.enableResultFields = function( enable ){
     self_form.form_elem.interestApplied.readonly = false;
   }
   else{
+    self_form.form_elem.monthlyQuote.value = "";
+    self_form.form_elem.interestApplied.value = "";
     self_form.form_elem.monthlyQuote.readonly = true;
     self_form.form_elem.interestApplied.readonly = true;
   }
