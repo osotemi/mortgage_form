@@ -13,6 +13,7 @@ function Form( form_id ){
   this.active_input = "";
   this.active_type = "";
   this.active_value = "";
+  this.active_id = "";
 
   var self=this; //Artifici binding
   this.getFormSelf = function(){return self;};
@@ -48,19 +49,17 @@ Form.prototype.setCurrent = function(){
   self_form.active_type = self_form.getActiveType();
   self_form.active_value = self_form.getActiveValue();
   self_form.active_input = self_form.getActiveInput();
+  self_form.active_id = self_form.getActiveId();
 }
 
 Form.prototype.setError = function( error_type, error_msage ){
   var self_form = this.getFormSelf();
-  var elem_id = self_form.active_type;
+  var elem_id = self_form.active_id;//get element id
   var element = document.getElementById(elem_id + "_div");
   error_message_id = elem_id +"_error_message";
-  //reinicialice error div
-  try{
-    this.removeError();
-  }catch(e){
+  //reinitiate error div
+  this.removeError();
 
-  }
   var child = document.createElement('div');
   child.setAttribute( 'id', error_message_id);
   child.setAttribute( 'class', 'msg');
@@ -82,10 +81,15 @@ Form.prototype.setError = function( error_type, error_msage ){
 
 Form.prototype.removeError = function( error_type, error_msage ){
   var self_form = this.getFormSelf();
-  var elem_id = self_form.active_type;
+  var elem_id = self_form.active_id;
   var element = document.getElementById(elem_id + "_div");
   var error_elem = document.getElementById( elem_id + "_error_message" );
-  element.removeChild( error_elem );
+  try{
+    //If already have an error; remove it
+    element.removeChild( error_elem );
+  }catch(e){
+
+  }
 };
 
 Form.prototype.setInterestAplied = function(){
@@ -138,14 +142,18 @@ Form.prototype.changeRateType = function(){
 
   if( self_form.rate_type_selected == "fixed"){
     self_form.form_elem.fixed_interest.disabled = false;
+
     self_form.form_elem.euribor.disabled = true;
+    self_form.form_elem.euribor.value = 0;
     self_form.form_elem.differential.disabled = true;
+    self_form.form_elem.differential.value = 0;
     self_form.fixed_enabled = true;
   }
   else {
     self_form.form_elem.euribor.disabled = false;
     self_form.form_elem.differential.disabled = false;
     self_form.form_elem.fixed_interest.disabled = true;
+    self_form.form_elem.fixed_interest.value = 0;
     self_form.fixed_enabled = false;
   }
 }

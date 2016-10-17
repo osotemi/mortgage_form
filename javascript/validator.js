@@ -22,8 +22,11 @@ function Validator( context ){
     valid_fixed : false,
   };
 
-  this.isValidRateType = function(){
-
+  this.validRequired = {
+    valid_dni : false,
+    valid_name : false,
+    valid_surname : false,
+    valid_email : false,
   };
 
   withObserver.call(Validator.prototype);
@@ -62,26 +65,26 @@ function Validator( context ){
 }
 
 Validator.prototype.paTypeValidate = function( pattern ){
-  var current_element = document.activeElement;
 
   if (  this.current_value == ("Monthly income" || "capital" || "euribor" || "differential" || "Fixed interest rate" || "How many years?" )){
      this.current_element.value = "";
-     this.valid = false;
+     return false;
   }
-  else if( this.current_value == "" ){
+  else if( this.current_value == "" && this.current_element.required ){
+    this.current_errorType = "This field can't be empty";
     this.current_element.style.border = "1px solid red";
     //this.current_element.focus();
-    this.valid = false;
+    return false;
   }
   else{
     if(!pattern.test(this.current_value)){
-       this.current_element.style.border = "1px solid red";
-       //this.current_element.focus();
-       this.valid = false;
+      this.current_errorType = "PATTERN";
+      this.current_element.style.border = "1px solid red";
+      return false;
     }
     else{
-      this.current_element.style.border = "2px solid green";
-      this.valid = true;
+      this.current_element.style.border = "1px solid grey";
+      return true;
     }
   }
 };
@@ -149,12 +152,21 @@ Validator.prototype.switchTypeValidate = function(){
   switch (this.current_type) {
     case "money":
       this.check(this.paTypeValidate( money_pattern ));
+      if( this.current_errorType == "PATTERN" ){
+        this.current_errorMessege = "Money must be a number";
+      }
       break;
     case "dec_percentage":
       this.check(this.paTypeValidate( dec_pattern ));
+      if( this.current_errorType == "PATTERN" ){
+        this.current_errorMessege = "This field allows numbers between 9.999 , -9.999";
+      }
       break;
     case "number":
       this.check(this.paTypeValidate( num_pattern ));
+      if( this.current_errorType == "PATTERN" ){
+        this.current_errorMessege = "The period must be between 10 to 99 ";
+      }
       break;
     case "nif":
       this.validateNIF();
@@ -182,29 +194,34 @@ Validator.prototype.validateAge = function(){
   if ( age == "" || age == "Don't lie"){
     this.current_errorType = "";
     this.current_element.style.border = "1px solid grey";
+    return false;
   }
   else if ( !age.match(age_pattern) ){
     //Error pattern
     this.current_errorType = "PATTERN";
     this.current_errorMessege = "This input can't be an age";
     this.current_element.style.border = "1px solid red";
+    return false;
   }
   else if (age < 18){
     //Error too young
     this.current_errorType = "SPECIAL";
     this.current_errorMessege = "Too young to get a morge";
     this.current_element.style.border = "1px solid red";
+    return false;
   }
   else if ( age > 65 ){
     //Error too old
     this.current_errorType = "SPECIAL";
     this.current_errorMessege = "Too old to get a morge";
     this.current_element.style.border = "1px solid red";
+    return false;
   }
   else{
     //OK
     this.current_errorType = "";
     this.current_element.style.border = "1px solid grey";
+    return false;
   }
 };
 
@@ -234,7 +251,6 @@ Validator.prototype.validateNIF = function(){
   }
   else{
     this.current_element.style.border = "1px solid red";
-    this.current_element.focus();
     return false;
   }
 

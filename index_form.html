@@ -20,7 +20,7 @@
 		   <legend class="text-info">Economic data</legend>
 		   <div class="form-group required">
 				<label class="control-label col-sm-6">Monthly income:</label>
-				<div class="col-sm-6" id="label_income">
+				<div class="col-sm-6" id="ingresos_mensuales_div">
 					<input required pa-type="money" id="ingresos_mensuales" name="ingresos_mensuales" placeholder="Monthly income" type="text" class="form-control" >
 				</div>
 
@@ -28,14 +28,14 @@
 
 			<div class="form-group required">
 				<label class="control-label col-sm-6">CAPITAL:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="capital_div">
 					<input required pa-type="money" id="capital" name="capital" placeholder="capital" type="text" class="form-control" >
 				</div>
 			</div>
 
 			<div class="form-group required">
 				<label class="control-label col-sm-6">INTEREST RATE </label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="_div">
 					<select name="interest_rate_type" id="interest_rate_type" class="form-control">
 						<option value="variable">variable</option>
 						<option value="fixed">fixed</option>
@@ -45,28 +45,28 @@
 
 			<div class="form-group">
 				<label class="control-label col-sm-6">EURIBOR:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="euribor_div">
 					<input id="euribor" pa-required="interest_rate_type==variable then interestApplied+=euribor" pa-type="dec_percentage" name="euribor" placeholder="euribor" type="text" class="form-control" >
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-sm-6">DIFFERENTIAL:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="differential_div">
 					<input id="differential" pa-required="interest_rate_type==variable then interestApplied+=percentage" pa-type="dec_percentage" name="differential" placeholder="differential" type="text" class="form-control">
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-sm-6">Fixed interest rate</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="fixed_interest_div">
 					<input id="fixed_interest" pa-required="interest_rate_type==fixed then interestApplied+=fixed_interest" pa-type="dec_percentage" name="fixed_interest" placeholder="Fixed interest rate" type="text" class="form-control" >
 				</div>
 			</div>
 
 			<div class="form-group required">
 				<label class="control-label col-sm-6">Period</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="period_div">
 					<input id="period" required pa-type="number" pa-range="min:5,max:100" name="period" placeholder="How many years?" type="text" class="form-control">
 				</div>
 			</div>
@@ -79,26 +79,26 @@
 		  <legend class="text-info">Personal data</legend>
 			   <div class="form-group required">
 			  <label class="control-label col-sm-6">NIF:</label>
-	  <div class="col-sm-6">
+	  <div class="col-sm-6" id="nif_div">
 				<input id="nif" name="nif" required pa-type="nif" placeholder="With char letter at the end, please." type="text" class="form-control"   value= >
 			  </div>
 			</div>
 			<div class="form-group required">
 				<label class="control-label col-sm-6">NAME:</label>
-		<div class="col-sm-6">
+		<div class="col-sm-6" id="name_div">
 					<input id="nombre" name="name" required pa-type="text" placeholder="Name" type="text" class="form-control" value=>
 		</div>
 			</div>
 			<div class="form-group required">
 				<label class="control-label col-sm-6">First Surname:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="surname1_div">
 				<input id="surname1" name="surname1" required pa-type="text" placeholder="First Surname" type="text" class="form-control" >
 		</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-sm-6">Second Surname:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="surname2_div">
 			<input id="surname2" name="surname2" pa-type="text" placeholder="Second Surname" type="text" class="form-control">
 		</div>
 		</div>
@@ -112,15 +112,15 @@
 			</div>
 
 			<div class="form-group">
-        
+
 				<label class="control-label col-sm-6">MOBILE:</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="phone_div">
 				<input id="mobile" pa-type="phone" name="mobile" placeholder="Mobile number" type="text" class="form-control">
 				</div>
 			</div>
 			<div class="form-group required">
 				<label class="control-label col-sm-6">EMAIL</label>
-				<div class="col-sm-6">
+				<div class="col-sm-6" id="email_div">
 				<input id="email" name="email" required pa-type="email" placeholder="email" type="text" class="form-control"  >
 				</div>
 			</div>

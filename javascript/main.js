@@ -35,14 +35,14 @@ window.onload = function(){
   var setInterestAplied = function(event){
     context_.form_.setInterestAplied();
   }
-  //context_.form_.form_elem.getElementById("interest_rate_type").setAttribute("onchange", function(){context_.form_.rateTypeFeilds();});
+  
   var setCurrent = function(event){
     context_.form_.setCurrent();
   }
 
   var listenForm = function(event){
     event.preventDefault();
-    setCurrent();
+    //setCurrent();
     context_.start();
   }
 
@@ -55,7 +55,8 @@ window.onload = function(){
     }
   }
 
-  window.addEventListener("keyup",listenForm);
+  //I have to use addEventListener becouse the onfocus gives troubles with
+  window.addEventListener("keyup",setCurrent);
   document.getElementById('interest_rate_type').onchange = changeRate;
   document.getElementById('homeInsurance').onchange = setInterestAplied;
   document.getElementById('paysheet').onchange = setInterestAplied;
